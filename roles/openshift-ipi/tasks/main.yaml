@@ -1,0 +1,48 @@
+---
+- name: fetch installer
+  get_url:
+    url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_version }}/openshift-install-linux-{{ ocp_version }}.tar.gz
+    dest: /var/tmp/openshift-install-linux-{{ ocp_version }}.tar.gz
+  environment:
+    http_proxy: "{{ http_proxy }}"
+    https_proxy: "{{ https_proxy }}"
+- name: fetch clients
+  get_url:
+    url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_version }}/openshift-client-linux-{{ ocp_version }}.tar.gz
+    dest: /var/tmp/openshift-client-linux-{{ ocp_version }}.tar.gz
+  environment:
+    http_proxy: "{{ http_proxy }}"
+    https_proxy: "{{ https_proxy }}"
+
+- name: extract installer
+  become: true
+  unarchive:
+    src: /var/tmp/openshift-install-linux-{{ ocp_version }}.tar.gz
+    dest: /usr/local/bin
+    mode: +x
+    remote_src: yes
+
+- name: extract clients
+  become: true
+  unarchive:
+    src: /var/tmp/openshift-client-linux-{{ ocp_version }}.tar.gz
+    dest: /usr/local/bin
+    mode: +x
+    remote_src: yes
+
+- name: Create install folder
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+
+- name: Copy install-config.yaml
+  template:
+    src: templates/install-config.j2
+    dest: "{{ install_dir }}/install-config.yaml"
+
+- name: Setup the OCP cluster
+  command: "/usr/local/bin/openshift-install create manifests --dir {{ install_dir }} --log-level debug"
+  environment:
+    http_proxy: "{{ http_proxy }}"
+    https_proxy: "{{ https_proxy }}"
+    no_proxy: "{{ no_proxy }}"

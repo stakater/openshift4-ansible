@@ -1,0 +1,5 @@
+---
+- name: Setup the app_of_apps
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'app_of_apps.j2') }}"

@@ -1,0 +1,40 @@
+install_dir: patchtry
+ocp_version: 4.7.13
+cluster_name: patch
+base_domain: examples.com
+
+proxy: yes
+http_proxy: http://fwdproxy.lfv.se:8080
+https_proxy: http://fwdproxy.lfv.se:8080
+no_proxy: ".examples.com"
+
+# Master nodes
+masters_cpu: 4
+masters_ram: 16384
+masters_disk: 100
+
+# Worker nodes
+workers_replicas: 3
+workers_cpu: 4
+workers_ram: 16384
+workers_disk: 200
+
+# Network
+cluster_network_cidr: "10.139.0.0/16"
+cluster_network_prefix: 23
+machine_network_cidr: "10.83.2.0/24"
+service_network_cidr: "10.183.0.0/16"
+
+vcenter_hostname: tdsvcenter.lfv.se
+vcenter_username: Openshift@vsphere.local
+vcenter_password: Passw0rd
+vcenter_datacenter: TDS
+vcenter_pv_datastore: vsanDatastore
+vm_dir_path: ""
+vm_network: TDS-Net
+vm_cluster: TDSvSAN
+apiVIP: 10.10.10.10
+ingressVIP: 10.10.10.11
+pull_secret: 'PULL_SECRET'
+ssh_key: 'SSH_KEY'
+additional_trust_bundle: ""
