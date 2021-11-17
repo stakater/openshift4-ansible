@@ -1,0 +1,11 @@
+---
+- name: Openshift IPI
+  hosts: jumpbox
+  gather_facts: false
+  module_defaults:
+    get_url:
+      timeout: 60
+  vars_files:
+  - ocp 
+  roles:
+  - role: openshift-ipi

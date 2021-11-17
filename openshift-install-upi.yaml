@@ -1,0 +1,6 @@
+---
+- name: openshift-install
+  hosts: jumpbox
+  gather_facts: false
+  roles:
+  - role: openshift-installer

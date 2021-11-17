@@ -1,0 +1,25 @@
+---
+## This role is currently not working due to being blocked from performing the action. 
+#  Deploy the template manually 
+- name: Check if OVA already exists
+  stat:
+    path: "/tmp/rhcos-{{ ocp_version }}-x86_64-vmware.x86_64.ova"
+  register: ova_file
+
+- name: Deploy OVA template to VMware folder
+  vmware_deploy_ovf:
+    hostname: "{{ vcenter_hostname }}"
+    username: "{{ vcenter_username }}"
+    password: "{{ vcenter_password }}"
+    datacenter: "{{ vcenter_datacenter }}"
+    cluster: "{{ vcenter_cluster }}"
+    datastore: "LOCATION_23_10"
+    folder: "{{ vm_dir_path }} | default"
+    name: "{{ vcenter_template }}"
+    allow_duplicates: False
+    disk_provisioning: thin
+    networks: "{u'VM Network':u'{{ network }}'}"
+    ova: "{{ ova_file.stat.path }}"
+    power_on: False
+    validate_certs: False
+  when: ova_file.stat.exists

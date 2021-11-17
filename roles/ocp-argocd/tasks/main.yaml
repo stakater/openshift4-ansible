@@ -1,0 +1,54 @@
+---
+- name: Create the namespace
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/argocd-ns.yaml') | from_yaml }}"
+
+- name: Create the operatorgroup
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/operatorgroup.yaml') }}"
+
+- name: Create the subscription
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/sub.yaml') }}"
+
+# Investigate proper wait for subscription above to skip this
+- name: Wait workaround for subscription
+  wait_for:
+    timeout: 60
+
+- name: Create the CRD
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/crd.yaml') }}"   
+    wait: yes
+    wait_timeout: 200
+
+- name: ClusterBinding Workaround
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/cluster-admin.yaml') }}"
+
+- name: Create secret private-key
+  k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: private-key
+        namespace: argocd
+      data:
+        sshPrivateKey: "{{ private_key | b64encode }}"
+
+- name: Create the default project in ArgoCD
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'argocd-default.yaml') }}"
+
+- name: Setup the app_of_apps
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'app_of_apps.j2') }}"
