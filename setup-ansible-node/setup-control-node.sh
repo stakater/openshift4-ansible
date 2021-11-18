@@ -8,11 +8,11 @@ tnode_username=${tnode_username:-"ansible"}
 tnode_password=${tnode_password:-"ansible"}
 tnode_hostname=${tnode_hostname:-"localhost"}
 
-
-./scripts/create-pwless-sudoer-user.sh $cnode_username $cnode_password
-./scripts/gen-ssh-key.sh $cnode_username
+source ./scripts/install-packages.sh
+source ./scripts/create-pwless-sudoer-user.sh $cnode_username $cnode_password
+source ./scripts/gen-ssh-key.sh $cnode_username
 cp ./scripts/copy-ssh-id.sh /home/${cnode_username}/
 
 sudo su - $cnode_username -c "~/copy-ssh-id.sh ${tnode_username} ${tnode_password} ${tnode_hostname}"
-./scripts/install-python.sh
-./scripts/install-ansible.sh
+source ./scripts/install-python.sh
+source ./scripts/install-ansible.sh
