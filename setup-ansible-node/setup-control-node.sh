@@ -16,3 +16,7 @@ cp ./scripts/copy-ssh-id.sh /home/${cnode_username}/
 sudo su - $cnode_username -c "~/copy-ssh-id.sh ${tnode_username} ${tnode_password} ${tnode_hostname}"
 source ./scripts/install-python.sh
 source ./scripts/install-ansible.sh
+
+echo "You can run the following command to verify the setup."
+echo "ansible ${tnode_hostname} -m ping -u ${tnode_username}"
+echo""
