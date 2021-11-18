@@ -1,5 +1,5 @@
-cnode_username=ansible1
-cnode_password=ansible1
-tnode_username=ansible1
-tnode_password=ansible1
+cnode_username=ansible
+cnode_password=ansible
+tnode_username=ansible
+tnode_password=ansible
 tnode_hostname=localhost
