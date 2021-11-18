@@ -14,42 +14,45 @@ vars.txt contains the variables, their description is as follows:
 
 setup-target-node.sh reads variables from vars.txt and prepares the node for being managed by ansible it involves the following steps:
 
-	- Create user (username: tnode_username, password: tnode_password)
+	- Create user (username: tnode_username, password: tnode_password).
 	- Adds the user in wheel group.
 	- Gives the user passwordless sudo access.
-	- Install dependencies (Python3)
+	- Install dependencies (Python3).
 	- Creates an alias of /usr/bin/python3 as python.
 
 setup-control-node.sh reads variables from vars.txt and prepares the node for managing ansible target nodes. It does the following steps:
 
-	- Create user (username: cnode_username, password: cnode_password)
-        - Adds the user in wheel group.
-        - Gives the user passwordless sudo access.
-	- Generate ssh keys (as user cnode_username)
+	- Create user (username: cnode_username, password: cnode_password).
+	- Adds the user in wheel group.
+	- Gives the user passwordless sudo access.
+	- Generate ssh keys (as user cnode_username).
 	- Copy ssh public key to the target node <tnode_username>@<tnode_hostname>
-	- Install Packages (Python3, Ansible)
+	- Install Packages (Python3, Ansible).
 
 
 For creating a single node (control + target), vars.txt needs to be populated with the proper values. An example is given below:
 
 vars.txt
---------
-
+```
 cnode_username=ansible
 cnode_password=password
 tnode_username=ansible
 tnode_password=password
 tnode_hostname=localhost
-
-run 'setup-control-node.sh' to setup the node.
-
+```
+now run following command to setup the node.
+```
+setup-control-node.sh
+```
 To confirm proper setup:
 	- switch to <cnode_username> 'su - ansible'
 	- run ansible ad-hoc command 'ansible localhost -m ping -u ansible'
 
 Response should be as follows.
 
+```
 localhost | SUCCESS => {
     "changed": false,
     "ping": "pong"
 }
+```
