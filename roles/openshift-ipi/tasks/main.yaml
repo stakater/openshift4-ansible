@@ -6,6 +6,7 @@
   environment:
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
+
 - name: fetch clients
   get_url:
     url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_version }}/openshift-client-linux-{{ ocp_version }}.tar.gz
@@ -29,6 +30,36 @@
     dest: /usr/local/bin
     mode: +x
     remote_src: yes
+
+- name: fetch vcenter certs
+  get_url:
+    url: https://{{ vcenter_hostname }}/certs/download.zip
+    dest: /var/tmp/{{ vcenter_hostname }}/certificate-bundle.zip
+    validate_certs: no
+  environment:
+    http_proxy: "{{ http_proxy }}"
+    https_proxy: "{{ https_proxy }}"
+
+- name: extract vcenter certs
+  become: true
+  unarchive:
+    src: /var/tmp/{{ vcenter_hostname }}/certificate-bundle.zip
+    dest: /var/tmp/{{ vcenter_hostname }}/certs/
+    remote_src: yes
+
+- name: install vcenter certs to trust
+  command: "cp /var/tmp/{{ vcenter_hostname }}/certs/lin/* /etc/pki/ca-trust/source/anchors && update-ca-trust extract"
+
+- name: generate SSH key
+  openssh_keypair:
+    path: "{{ secrets_directory }}/ssh_keys/id_rsa.pub"
+    type: ed25519
+    size: 4096
+    state: present
+    force: no
+
+- name: configure ssh-agent
+  command: 'eval "$(ssh-agent -s)" && ssh-add {{ secrets_directory }}/ssh_keys/id_rsa'
 
 - name: Create install folder
   file:

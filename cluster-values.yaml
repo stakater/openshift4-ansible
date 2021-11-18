@@ -2,6 +2,7 @@ install_dir: patchtry
 ocp_version: 4.7.13
 cluster_name: patch
 base_domain: examples.com
+secrets_directory: /srv/secrets/
 
 proxy: yes
 http_proxy: http://fwdproxy.lfv.se:8080
@@ -36,5 +37,4 @@ vm_cluster: TDSvSAN
 apiVIP: 10.10.10.10
 ingressVIP: 10.10.10.11
 pull_secret: 'PULL_SECRET'
-ssh_key: 'SSH_KEY'
 additional_trust_bundle: ""
