@@ -1,6 +1,8 @@
 ---
 - name: Openshift IPI
-  hosts: jumpbox
+  user: ansible
+  hosts: local
+  connection: local 
   gather_facts: false
   module_defaults:
     get_url:

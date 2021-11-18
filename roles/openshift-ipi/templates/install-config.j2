@@ -53,7 +53,7 @@ platform:
     ingressVIP: "{{ ingressVIP }}"
 fips: false
 pullSecret: '{{ pull_secret }}'
-sshKey: '{{ lookup('file', '{{ secrets_directory }}/ssh_keys/id_rsa.pub') }}'
+sshKey: '{{ lookup('file', '{{ secrets_directory }}/ssh_keys/nodes.pub') }}'
 {% if additional_trust_bundle != "" %}
 additionalTrustBundle: |
   '{{ additional_trust_bundle }}'
