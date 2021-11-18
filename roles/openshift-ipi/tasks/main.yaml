@@ -72,8 +72,8 @@
     force: no
 
 - name: configure ssh-agent
-  shell: 
-    eval "$(ssh-agent -s)" 
+  shell:
+    eval "$(ssh-agent -s)"
     ssh-add {{ secrets_directory }}/ssh_keys/nodes
 
 - name: Create install folder
@@ -86,10 +86,9 @@
     src: templates/install-config.j2
     dest: "{{ install_dir }}/install-config.yaml"
 
-# Comment out for now to test rest of the steps
-#- name: Setup the OCP cluster
-#  command: "/usr/local/bin/openshift-install create manifests --dir {{ install_dir }} --log-level debug"
-#  environment:
-#    http_proxy: "{{ http_proxy }}"
-#    https_proxy: "{{ https_proxy }}"
-#    no_proxy: "{{ no_proxy }}"
+- name: Setup the OCP cluster
+  command: "/usr/local/bin/openshift-install create cluster --dir {{ install_dir }} --log-level debug"
+  environment:
+    http_proxy: "{{ http_proxy }}"
+    https_proxy: "{{ https_proxy }}"
+    no_proxy: "{{ no_proxy }}"
