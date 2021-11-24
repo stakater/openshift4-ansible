@@ -1,9 +1,7 @@
----
-apiVersion: project.openshift.io/v1
-kind: Project
+kind: Namespace
+apiVersion: v1
 metadata:
-  annotations:
-    openshift.io/display-name: "ArgoCD"
-    openshift.io/requester: "Ansible Automation"
-  name: argocd
-state: present
+  name: openshift-gitops
+  labels:
+    kubernetes.io/metadata.name: openshift-gitops
+    openshift.io/cluster-monitoring: 'true'

@@ -1,0 +1,31 @@
+    apiVersion: argoproj.io/v1alpha1
+    kind: ArgoCD
+    metadata:
+      namespace: openshift-gitops
+      name: argocd
+    spec:
+      resourceExclusions: |
+        - apiGroups:
+          - tekton.dev
+          clusters:
+          - '*'
+          kinds:
+          - TaskRun
+          - PipelineRun 
+      version: v1.7.7
+      dex:
+        openShiftOAuth: true
+      rbac:
+        defaultPolicy: 'role:app-admin'
+        policy: |
+          p, role:app-admin, applications, *, */*, allow
+          g, stakater-team, role:admin
+        scopes: '[groups]'
+      grafana:
+        enabled: true
+      prometheus:
+        enabled: true
+      server:
+        insecure: true
+        route:
+          enabled: true
