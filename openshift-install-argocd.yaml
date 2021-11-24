@@ -1,6 +1,6 @@
 ---
 - name: Setup OCP post installation
-  hosts: jumpbox
+  hosts: localhost 
   gather_facts: false 
 
   roles:
