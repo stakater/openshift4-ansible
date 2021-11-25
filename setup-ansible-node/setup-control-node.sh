@@ -17,6 +17,9 @@ sudo su - $cnode_username -c "~/copy-ssh-id.sh ${tnode_username} ${tnode_passwor
 source ./scripts/install-python.sh
 source ./scripts/install-ansible.sh
 
+echo "Installing K8s module for ansible"
+ansible-galaxy collection install community.kubernetes
+
 echo "You can run the following command to verify the setup."
 echo "ansible ${tnode_hostname} -m ping -u ${tnode_username}"
 echo""

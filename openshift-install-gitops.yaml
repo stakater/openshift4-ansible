@@ -1,0 +1,9 @@
+---
+- name: GitOps on OCP
+  hosts: localhost
+  gather_facts: false 
+  vars_files:
+  - gitops
+  - cluster-values.yaml
+  roles:
+  - role: ocp-gitops

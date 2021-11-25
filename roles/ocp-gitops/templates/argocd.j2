@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ArgoCD
 metadata:
   name: argocd
-  namespace: openshift-operators
+  namespace: openshift-gitops
 spec:
 {% if server == True %}
   server:
@@ -30,7 +30,6 @@ spec:
       enabled: {{ prometheus_route }}
     enabled: true
 {% endif %}
-
   rbac:
     defaultPolicy: 'role:app-admin'
     policy: |

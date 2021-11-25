@@ -1,0 +1,48 @@
+---
+- name: Create the namespace
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/argocd-ns.yaml') | from_yaml }}"
+    kubeconfig: "{{install_dir}}/auth/kubeconfig"
+
+
+- name: Create the subscription
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/subscription.yaml') }}"
+    kubeconfig: "{{install_dir}}/auth/kubeconfig"
+
+# Wait for subscription to deploy operator
+- name: Wait workaround for subscription
+  wait_for:
+    timeout: 60
+
+- name: Create Cluster role binding so ArgoCD can deploy cluster resources
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'files/clusterrolebinding.yaml') }}"
+    kubeconfig: "{{install_dir}}/auth/kubeconfig"
+
+- name: Create secret private-key
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'private_key_secret.j2') }}"
+    kubeconfig: "{{install_dir}}/auth/kubeconfig"
+
+- name: Create ArgoCD Instance
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'argocd.j2') }}"
+    kubeconfig: "{{install_dir}}/auth/kubeconfig"
+
+- name: Create the default project in ArgoCD
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'argocd-default.yaml') }}"
+    kubeconfig: "{{install_dir}}/auth/kubeconfig"
+
+- name: Setup the app_of_apps
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'app_of_apps.j2') }}"
+    kubeconfig: "{{install_dir}}/auth/kubeconfig"
