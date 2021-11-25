@@ -1,2 +1,2 @@
-[jumpbox]
-localhost
+[local]
+127.0.0.1
