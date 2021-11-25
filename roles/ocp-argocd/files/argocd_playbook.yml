@@ -1,0 +1,20 @@
+- name: templatise argocd cr file
+  hosts: localhost
+  remote_user: ansible
+  vars_files:
+  - example_values.yml
+  tasks:
+  - name: Generating secret file
+    template:
+      src: templates/key_secret.j2
+      dest: key_secret.yml
+  - name: apply secret
+    debug:
+      msg: 'DUMMY: Applying Secret'
+  - name: Generating ArgoCD Manifest
+    template:
+      src: templates/argocd_rd.j2
+      dest: argocd_rd.yml
+  - name: Applying ArgoCD Manifest
+    debug:
+      msg: 'DUMMY: Applying ArgoCD Manifest'

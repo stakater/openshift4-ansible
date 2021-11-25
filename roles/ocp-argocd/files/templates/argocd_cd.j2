@@ -1,0 +1,97 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: argocd
+  namespace: openshift-operators
+spec:
+{% if server == True %}
+  server:
+    resources:
+      limits:
+        cpu: {{ server_cpu_limit }}
+        memory: {{ server_mem_limit }}
+      requests:
+        cpu: {{ server_cpu_request }}
+        memory: {{ server_mem_request }}
+{% endif %}
+{% if server_route == True %}
+    route:
+      enabled: true
+{% endif %}
+{% if grafana == True %}
+  grafana:
+    route:
+      enabled: {{ grafana_route }}
+    enabled: true
+{% endif %}
+{% if prometheus == True %}
+  prometheus:
+    route:
+      enabled: {{ prometheus_route }}
+    enabled: true
+{% endif %}
+
+  rbac:
+    defaultPolicy: 'role:app-admin'
+    policy: |
+      p, role:app-admin, applications, *, */*, allow
+      g, system:cluster-admins, role:admin
+    scopes: '[groups]'
+  repo:
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1024Mi
+      requests:
+        cpu: 250m
+        memory: 256Mi
+  dex:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+    openShiftOAuth: true
+  initialSSHKnownHosts:
+    excludedefaulthosts: true
+    keys: |
+      [{{ ssh_git_url.split(':')[0] }}]:{{ ssh_git_url.split(':')[1] }} {{ lookup('file', '{{ repo_pub_ssh_key_file }}') }}
+  repositoryCredentials: |
+    - sshPrivateKeySecret:
+        key: sshPrivateKey
+        name: private-key
+      type: git
+      url: ssh://git@{{ ssh_git_url }}
+  ha:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+    enabled: true
+  redis:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 250m
+        memory: 128Mi
+  controller:
+    resources:
+      limits:
+        cpu: 2000m
+        memory: 2048Mi
+      requests:
+        cpu: 250m
+        memory: 1024Mi
+    sharding:
+      enabled: true
+      replicas: 3
+    appSync: 3m
+    logFormat: json
+  statusBadgeEnabled: true
