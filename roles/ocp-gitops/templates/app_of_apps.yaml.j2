@@ -10,7 +10,11 @@ spec:
   project: default
   source:
     path: {{appofapps_path}}
-    repoURL: {{ gitops_repo_url }}
+{% if git_ssh_enabled  == True %}
+    repoURL: "ssh://git@{{ssh_git_url}}/{{ gitops_repo_path }}"
+{% else %}
+    repoURL: "https://{{ssh_git_url}}/{{ gitops_repo_path }}"
+{% endif %}
     targetRevision: HEAD
   syncPolicy:
     automated:

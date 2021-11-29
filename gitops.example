@@ -11,5 +11,10 @@ prometheus_route: true
 ssh_git_url: gitserver.acme.com:7999
 gitops_repo_path: /org/repo.git
 appofapps_path: /
+git_ssh_enabled: False
+# For SSH connections
 repo_pub_ssh_key_file: keys/key.pub
 repo_pvt_ssh_key_file: keys/key
+# For HTTP connections
+# repo_git_http_username: username
+# repo_git_http_password: password

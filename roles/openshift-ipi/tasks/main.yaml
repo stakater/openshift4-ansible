@@ -6,6 +6,7 @@
   environment:
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
+
 - name: fetch clients
   get_url:
     url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_version }}/openshift-client-linux-{{ ocp_version }}.tar.gz
@@ -18,7 +19,7 @@
   become: true
   unarchive:
     src: /var/tmp/openshift-install-linux-{{ ocp_version }}.tar.gz
-    dest: /usr/local/bin
+    dest: /usr/bin
     mode: +x
     remote_src: yes
 
