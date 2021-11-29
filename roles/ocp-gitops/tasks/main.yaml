@@ -61,12 +61,11 @@
   environment:
     KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
 
-
-#    - name: Cleanup Temporary rendered files
-#      file:
-#        path: "{{ item }}"
-#        state: absent
-#      with_items:
-#      - /tmp/app_of_apps.yaml
-     # - /tmp/argocd.yaml
-     # - /tmp/credentials_secret.yaml
+- name: Cleanup Temporary rendered files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+  - /tmp/app_of_apps.yaml
+  - /tmp/argocd.yaml
+  - /tmp/credentials_secret.yaml
