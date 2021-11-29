@@ -64,16 +64,6 @@ spec:
         name: private-key
       type: git
       url: "ssh://git@{{ ssh_git_url }}/{{ gitops_repo_path }}"
-{% else %}
-#  repositories: |
-#    - type: git
-#      url: https://{{ ssh_git_url }}/{{ gitops_repo_path }}
-#      passwordSecret:
-#        key: password
-#        name: git-http-credentials
-#      usernameSecret:
-#        key: username
-#        name: git-http-credentials
 {% endif %}
   ha:
     resources:

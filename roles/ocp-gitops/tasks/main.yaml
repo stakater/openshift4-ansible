@@ -12,9 +12,9 @@
     KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
 
 # Wait for subscription to deploy operator
-#- name: Wait workaround for subscription
-#  wait_for:
-#    timeout: 120
+- name: Wait workaround for subscription
+  wait_for:
+    timeout: 120
 
 - name: Create Cluster role binding so ArgoCD can deploy cluster resources
   shell: |
