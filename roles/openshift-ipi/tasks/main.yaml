@@ -3,6 +3,7 @@
   get_url:
     url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_version }}/openshift-install-linux-{{ ocp_version }}.tar.gz
     dest: /var/tmp/openshift-install-linux-{{ ocp_version }}.tar.gz
+    validate_certs: no
   environment:
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
@@ -11,6 +12,7 @@
   get_url:
     url: https://mirror.openshift.com/pub/openshift-v4/clients/ocp/{{ ocp_version }}/openshift-client-linux-{{ ocp_version }}.tar.gz
     dest: /var/tmp/openshift-client-linux-{{ ocp_version }}.tar.gz
+    validate_certs: no
   environment:
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
@@ -31,6 +33,49 @@
     mode: +x
     remote_src: yes
 
+- name: fetch vcenter certs
+  get_url:
+    url: https://{{ vcenter_hostname }}/certs/download.zip
+    dest: /var/tmp/vcenter-certificate-bundle.zip
+    validate_certs: no
+  environment:
+    noproxy_url: "{{ vcenter_hostname }}"
+
+- name: ensure vcenter-certs directory exists
+  file:
+    path: /var/tmp/vcenter-certs/
+    state: directory
+
+- name: extract vcenter certs
+  become: true
+  unarchive:
+    src: /var/tmp/vcenter-certificate-bundle.zip
+    dest: /var/tmp/vcenter-certs/
+    remote_src: yes
+
+- name: install vcenter certs to trust
+  shell: |
+    cp /var/tmp/vcenter-certs/certs/lin/* /etc/pki/ca-trust/source/anchors
+    update-ca-trust extract
+
+- name: ensure ssh-keys directory exists
+  file:
+    path: "{{ secrets_directory }}/ssh_keys"
+    state: directory
+
+- name: generate SSH key
+  openssh_keypair:
+    path: "{{ secrets_directory }}/ssh_keys/nodes"
+    type: ed25519
+    size: 4096
+    state: present
+    force: no
+
+- name: configure ssh-agent
+  shell:
+    eval "$(ssh-agent -s)"
+    ssh-add {{ secrets_directory }}/ssh_keys/nodes
+
 - name: Create install folder
   file:
     path: "{{ install_dir }}"
@@ -42,8 +87,9 @@
     dest: "{{ install_dir }}/install-config.yaml"
 
 - name: Setup the OCP cluster
-  command: "/usr/local/bin/openshift-install create manifests --dir {{ install_dir }} --log-level debug"
+  command: "/usr/local/bin/openshift-install create cluster --dir {{ install_dir }} --log-level debug"
   environment:
+    no_proxy: "{{ no_proxy }}"
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
-    no_proxy: "{{ no_proxy }}"
+

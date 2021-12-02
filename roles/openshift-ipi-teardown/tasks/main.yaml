@@ -1,0 +1,7 @@
+- name: destroy the OCP cluster
+  command: "/usr/local/bin/openshift-install destroy cluster --dir {{ install_dir }} --log-level debug"
+  environment:
+    no_proxy: "{{ no_proxy }}"
+    http_proxy: "{{ http_proxy }}"
+    https_proxy: "{{ https_proxy }}"
+

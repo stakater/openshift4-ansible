@@ -1,13 +1,13 @@
 ---
-- name: Openshift IPI
+- name: Openshift IPI Teardown
   user: ansible
   hosts: localhost
-  connection: local 
+  connection: local
   gather_facts: false
   module_defaults:
     get_url:
       timeout: 60
   vars_files:
-  - ocp 
+  - ocp
   roles:
-  - role: openshift-ipi
+  - role: openshift-ipi-teardown
