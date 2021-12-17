@@ -16,6 +16,8 @@ spec:
     repoURL: "https://{{ssh_git_url}}/{{ gitops_repo_path }}"
 {% endif %}
     targetRevision: HEAD
+    directory:
+      recurse: true
   syncPolicy:
     automated:
       prune: true

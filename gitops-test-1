@@ -1,0 +1,16 @@
+server: true
+server_cpu_limit: 500m
+server_mem_limit: 500Mi
+server_cpu_request: 200m
+server_mem_request: 200Mi
+server_route: true
+grafana: false
+grafana_route: true
+prometheus: true
+prometheus_route: true
+ssh_git_url: github.com
+gitops_repo_path: stakater/udi-gitops-config.git
+appofapps_path: test-1/argocd-apps
+git_ssh_enabled: False
+repo_git_http_username_file: /srv/secrets/gitops/udi_gitops_username
+repo_git_http_password_file: /srv/secrets/gitops/udi_gitops_password
