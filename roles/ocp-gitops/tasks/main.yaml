@@ -1,0 +1,71 @@
+---
+- name: Create the namespace
+  shell: |
+    oc apply -f {{ role_path }}/files/argocd-ns.yaml
+  environment:
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
+
+- name: Create the subscription
+  shell: |
+    oc apply -f {{ role_path }}/files/subscription.yaml
+  environment:
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
+
+# Wait for subscription to deploy operator
+- name: Wait workaround for subscription
+  wait_for:
+    timeout: 120
+
+- name: Create Cluster role binding so ArgoCD can deploy cluster resources
+  shell: |
+    oc apply -f {{ role_path }}/files/clusterrolebinding.yaml
+  environment:
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
+
+- name: Render Credentials secret
+  template:
+    src: credentials_secret.yaml.j2
+    dest: /tmp/credentials_secret.yaml
+
+- name: Create Credentials secret
+  shell: |
+    oc apply -f /tmp/credentials_secret.yaml
+  environment:
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"  
+
+- name: Render ArgoCD instance manifest
+  template:
+    src: "{{ role_path }}/templates/argocd.yaml.j2"
+    dest: /tmp/argocd.yaml
+
+- name: Create ArgoCD Instance
+  shell: |
+    oc apply -f /tmp/argocd.yaml
+  environment:
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig" 
+
+- name: Create the default project in ArgoCD
+  shell: |
+    oc apply -f {{ role_path }}/files/argocd-default.yaml
+  environment:
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
+
+- name: Render AppofApps manifest
+  template:
+    src: "{{ role_path }}/templates/app_of_apps.yaml.j2"
+    dest: /tmp/app_of_apps.yaml
+
+- name: Create the app_of_apps
+  shell: |
+    oc apply -f /tmp/app_of_apps.yaml
+  environment:
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
+
+- name: Cleanup Temporary rendered files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+  - /tmp/app_of_apps.yaml
+  - /tmp/argocd.yaml
+  - /tmp/credentials_secret.yaml

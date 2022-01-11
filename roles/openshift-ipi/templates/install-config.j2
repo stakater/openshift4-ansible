@@ -24,7 +24,7 @@ controlPlane:
         diskSizeGB: {{masters_disk | default(120) }}
 metadata:
   name: {{ cluster_name | lower}}
-{% if proxy == yes %}
+{% if proxy %}
 proxy:
   httpProxy: "{{ http_proxy }}"
   httpsProxy: "{{ https_proxy }}"

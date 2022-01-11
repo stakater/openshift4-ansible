@@ -21,7 +21,7 @@
   become: true
   unarchive:
     src: /var/tmp/openshift-install-linux-{{ ocp_version }}.tar.gz
-    dest: /usr/local/bin
+    dest: /usr/bin
     mode: +x
     remote_src: yes
 
