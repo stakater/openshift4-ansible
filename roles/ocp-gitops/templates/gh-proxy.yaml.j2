@@ -23,7 +23,7 @@ spec:
       containers:
       - args:
         - tcp-listen:8080,fork,reuseaddr
-        - proxy:REDACTEDPROXYHOST:REDACTEDPROXYPORT:ssh.github.com:443,proxyport=8080
+        - proxy:{{ github_proxy_server }}:ssh.github.com:443,proxyport=8080
         command:
         - socat
         image: alpine/socat

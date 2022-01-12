@@ -5,11 +5,18 @@
   environment:
     KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
 
+- name: Render gh-proxy pod deployment manifest
+  template:
+    src: "{{ role_path }}/templates/gh-proxy.yaml.j2"
+    dest: /tmp/gh-proxy.yaml
+    when: github_proxy_enabled
+
 - name: Create the gh-proxy
   shell: |
-    oc apply -f {{ role_path }}/files/gh-proxy.yaml
+    oc apply -f /tmp/gh-proxy.yaml
   environment:
     KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
+  when: github_proxy_enabled
 
 - name: Create the subscription
   shell: |
