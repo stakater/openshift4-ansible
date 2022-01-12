@@ -64,7 +64,7 @@ spec:
   repositoryCredentials: |
     - sshPrivateKeySecret:
         key: sshPrivateKey
-        name: private-key
+        name: gitops-repo
       type: git
       url: "ssh://git@{{ ssh_git_url }}/{{ gitops_repo_path }}"
 {% else %}
