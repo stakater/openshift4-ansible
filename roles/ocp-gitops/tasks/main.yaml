@@ -31,7 +31,13 @@
   shell: |
     oc apply -f /tmp/credentials_secret.yaml
   environment:
-    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"  
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
+
+- name: Delete default ArgoCD instance
+  shell: |
+    oc delete gitopsservice cluster -n openshift-gitops
+  environment:
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
 
 - name: Render ArgoCD instance manifest
   template:
@@ -42,7 +48,7 @@
   shell: |
     oc apply -f /tmp/argocd.yaml
   environment:
-    KUBECONFIG: "{{install_dir}}/auth/kubeconfig" 
+    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
 
 - name: Create the default project in ArgoCD
   shell: |
