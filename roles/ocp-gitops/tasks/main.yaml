@@ -15,7 +15,7 @@
   shell: |
     oc apply -f /tmp/gh-proxy.yaml
   environment:
-    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
+    KUBECONFIG: "{{ install_dir }}/auth/kubeconfig"
   when: github_proxy_enabled
 
 - name: Create the subscription
