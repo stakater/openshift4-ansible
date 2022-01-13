@@ -69,9 +69,16 @@
   environment:
     KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
 
-- name: Install SSH known hosts configMap for ArgoCD
+
+- name: Render SSH known hosts ConfigMap manifest
+  template:
+    src: "{{ role_path }}/templates/argocd-knownhosts.yaml.j2"
+    dest: /tmp/argocd-knownhosts.yaml
+
+
+- name: Install SSH known hosts ConfigMap for ArgoCD
   shell: |
-    oc apply -f {{ role_path }}/files/argocd-knownhosts.yaml
+    oc apply -f /tmp/argocd-knownhosts.yaml
   environment:
     KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
 
