@@ -26,4 +26,5 @@ repo_pvt_ssh_key_file: keys/key
 # Make sure ssh_git_url points to gh-proxy (default port)
 github_proxy_enabled: false
 # Format: {proxy_hostname}:{proxy_port}
-github_proxy_server: proxy.customer.example:8080
+github_proxy_server: proxy.customer.example
+github_proxy_server_port: 8080
