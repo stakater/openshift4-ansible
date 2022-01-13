@@ -17,6 +17,8 @@ git_ssh_enabled: False
 # For SSH connections
 repo_pub_ssh_key_file: keys/key.pub
 repo_pvt_ssh_key_file: keys/key
+# optional SSH known_hosts file to add
+repo_known_hosts: known_hosts
 
 # For HTTP connections
 # repo_git_http_username: username
