@@ -57,7 +57,7 @@ spec:
         memory: 128Mi
     openShiftOAuth: true
   initialSSHKnownHosts:
-    excludedefaulthosts: true
+    excludedefaulthosts: false
     keys: |
       {{ lookup('file', '{{ repo_known_hosts }}') }}
 
