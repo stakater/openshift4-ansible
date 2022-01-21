@@ -69,19 +69,6 @@
   environment:
     KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
 
-
-- name: Render SSH known hosts ConfigMap manifest
-  template:
-    src: "{{ role_path }}/templates/argocd-knownhosts.yaml.j2"
-    dest: /tmp/argocd-knownhosts.yaml
-
-
-- name: Install SSH known hosts ConfigMap for ArgoCD
-  shell: |
-    oc apply -f /tmp/argocd-knownhosts.yaml
-  environment:
-    KUBECONFIG: "{{install_dir}}/auth/kubeconfig"
-
 - name: Render AppofApps manifest
   template:
     src: "{{ role_path }}/templates/app_of_apps.yaml.j2"
