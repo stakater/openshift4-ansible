@@ -19,7 +19,7 @@ INGRESS_CERT_KEY_FILE=${SECRETS_DIR}/openshift/wildcard.apps.test-1.cp.udi.no/wi
 
 # API Certificates
 ## Generate Certificate secret
-oc create secret tls cluster-api-certificate-default --cert=${API_CERT_CHAIN_FILE} --key=${API_CERT_KEY_FILE} -n openshift-config --dry-run -o yaml > ${SECRETS_DIR}/api-custom-cert.yaml
+oc create secret tls cluster-api-certificate-default --cert=${API_CERT_CHAIN_FILE} --key=${API_CERT_KEY_FILE} -n openshift-config --dry-run=client -o yaml > ${SECRETS_DIR}/api-custom-cert.yaml
 
 ## Seal Certificate
 echo "Commit this API TLS Sealed Secret in GitOps repository to patch API certificate:"
@@ -29,12 +29,12 @@ echo
 # INGRESS Certificates
 # Generate CUSTOM CA configmap
 echo "Commit this CUSTOM CA configmap in GitOps repository to patch CUSTOM CAs:"
-oc create configmap custom-ca --from-file=ca-bundle.crt=${INGRESS_CERT_BUNDLE_FILE} -n openshift-config --dry-run -o yaml > ${SECRETS_DIR}/ingress-custom-ca.yaml
+oc create configmap custom-ca --from-file=ca-bundle.crt=${INGRESS_CERT_BUNDLE_FILE} -n openshift-config --dry-run=client -o yaml > ${SECRETS_DIR}/ingress-custom-ca.yaml
 cat ${SECRETS_DIR}/ingress-custom-ca.yaml 
 echo
 
 ## Generate Ingress TLS certificate secret
-oc create secret tls cluster-ingress-certificate-default --cert=${INGRESS_CERT_FILE} --key=${INGRESS_CERT_KEY_FILE} -n openshift-ingress --dry-run -o yaml > ${SECRETS_DIR}/ingress-tls-cert.yaml
+oc create secret tls cluster-ingress-certificate-default --cert=${INGRESS_CERT_FILE} --key=${INGRESS_CERT_KEY_FILE} -n openshift-ingress --dry-run=client -o yaml > ${SECRETS_DIR}/ingress-tls-cert.yaml
 
 ## Seal Certificate
 echo "Commit this API TLS Sealed Secret in GitOps repository to patch API certificate:"
