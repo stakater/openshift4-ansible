@@ -30,6 +30,7 @@ export SECRETNAME="sealed-secrets-key"
 
 openssl req -x509 -nodes -newkey rsa:4096 -keyout "$dir_path/$PRIVATEKEY" -out "$dir_path/$PUBLICKEY" -subj "/CN=sealed-secret/O=sealed-secret"
 
+oc create ns "$NAMESPACE"
 oc -n "$NAMESPACE" create secret tls "$SECRETNAME" --cert="$dir_path/$PUBLICKEY" --key="$dir_path/$PRIVATEKEY"
 oc -n "$NAMESPACE" label secret "$SECRETNAME" sealedsecrets.bitnami.com/sealed-secrets-key=active
 

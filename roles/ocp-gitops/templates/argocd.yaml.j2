@@ -56,15 +56,16 @@ spec:
         cpu: 250m
         memory: 128Mi
     openShiftOAuth: true
-{% if git_ssh_enabled == True %}
   initialSSHKnownHosts:
-    excludedefaulthosts: true
+    excludedefaulthosts: false
     keys: |
-      {{ ssh_git_url }} {{ lookup('file', '{{ repo_pub_ssh_key_file }}') }}
+      {{ lookup('file', '{{ repo_known_hosts }}') }}
+
+{% if git_ssh_enabled == True %}
   repositoryCredentials: |
     - sshPrivateKeySecret:
         key: sshPrivateKey
-        name: private-key
+        name: gitops-repo
       type: git
       url: "ssh://git@{{ ssh_git_url }}/{{ gitops_repo_path }}"
 {% else %}
@@ -78,6 +79,7 @@ spec:
         key: username
         name: gitops-repo
 {% endif %}
+
   ha:
     resources:
       limits:
